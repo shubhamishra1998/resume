@@ -1,0 +1,14 @@
+image: klakegg/hugo:0.121.2-ext
+
+variables:
+  GIT_DEPTH: "0"
+
+pages:
+  script:
+    - hugo --minify
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
+    - master
