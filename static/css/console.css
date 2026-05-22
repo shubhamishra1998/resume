@@ -709,10 +709,117 @@ h3 {
 .footer-right a:hover { color: var(--accent); }
 
 /* ===== Responsive ===== */
+
+/* Tablets and small laptops */
+@media (max-width: 980px) {
+  .topbar-search { max-width: none; }
+  .grid-2 { grid-template-columns: 1fr; }
+}
+
+/* Phones (landscape and large) */
 @media (max-width: 720px) {
-  .topbar { gap: 8px; padding: 0 10px; }
-  .topbar-right .pill:not(.user-pill) { display: none; }
-  .services-btn span:not(.bars) { display: none; }
-  .workspace { padding: 16px 14px 32px; }
+  :root { --topbar-h: auto; }
+
+  /* Topbar wraps to two rows: brand+account on top, search below */
+  .topbar {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 10px;
+    height: auto;
+    align-items: center;
+  }
+  .topbar-left { order: 1; flex: 0 0 auto; gap: 8px; }
+  .topbar-right { order: 2; flex: 1 1 auto; justify-content: flex-end; gap: 6px; }
+  .topbar-search {
+    order: 3;
+    flex: 1 1 100%;
+    max-width: none;
+    height: 34px;
+  }
+
+  /* Hide name pill text on small screens, keep just avatar */
+  .user-pill { padding: 4px; }
+  .user-pill .avatar { margin: 0; }
+  .user-pill { font-size: 0; }
+  .user-pill .avatar { font-size: 12px; }
+
+  /* Compact services button */
+  .services-btn .sv-label { display: none; }
+
+  /* Account / region buttons trimmed */
+  .account-btn { padding: 6px 8px; font-size: 12px; }
+  .topbar-right .account-wrap { padding-left: 0; }
+  .topbar-right .account-wrap.region-wrap { margin-left: auto; }
+
+  /* Dropdown panels stay inside viewport */
+  .account-panel, .services-panel {
+    right: 8px !important;
+    left: auto;
+    width: min(280px, calc(100vw - 16px));
+  }
+  .services-panel { right: auto !important; left: 8px; }
+  .sp-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+
+  /* Workspace and headings */
+  .workspace { padding: 14px 12px 28px; }
   .page-head h1 { font-size: 20px; }
+  .lede { font-size: 13px; }
+
+  /* Home split collapses; experience widget unsticks */
+  .home-split { grid-template-columns: 1fr; gap: 14px; }
+  .exp-widget { position: static; }
+
+  /* Service tile grid: 1 column on phones */
+  .tile-grid { grid-template-columns: 1fr; gap: 10px; }
+  .tile { padding: 12px; }
+  .tile-icon { width: 36px; height: 36px; }
+
+  /* Widgets */
+  .widget { padding: 14px; }
+  .widget-head h2 { font-size: 15px; }
+
+  /* Hero KVs and chips */
+  .hero-widget .grid-2 { gap: 8px; }
+  .kv { font-size: 12px; }
+
+  /* Company banners stack */
+  .company-banner { flex-wrap: wrap; padding: 12px; }
+  .company-banner img { max-height: 36px; }
+  .cb-title { font-size: 15px; }
+
+  /* Skill groups, badge grid, project cards */
+  .skill-groups { grid-template-columns: 1fr; }
+  .badge-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+  .badge-card { padding: 10px; }
+  .badge-img { width: 64px; height: 64px; }
+  .project-card { padding: 12px; }
+
+  /* Contact actions wrap */
+  .contact-actions { flex-wrap: wrap; gap: 8px; }
+  .contact-actions .btn { flex: 1 1 auto; justify-content: center; text-align: center; }
+
+  /* Footer stacks */
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 16px 14px;
+  }
+  .footer-right { gap: 10px; }
+
+  /* Search results panel positioned to viewport edges */
+  .search-results { left: 0; right: 0; }
+}
+
+/* Very small phones */
+@media (max-width: 420px) {
+  .aws-smile { font-size: 14px; }
+  .breadcrumb { font-size: 11px; flex-wrap: wrap; }
+  .page-head h1 { font-size: 18px; }
+  .chip { font-size: 11px; padding: 3px 8px; }
+  .badge-grid { grid-template-columns: 1fr; }
+  .sp-grid { grid-template-columns: 1fr; }
+  .topbar-right { gap: 4px; }
+  .account-btn { padding: 6px; font-size: 11px; }
+  .account-btn .caret { margin-left: 2px; }
 }
