@@ -7,23 +7,70 @@
       <a href="#" class="aws-logo" id="homeLink" aria-label="Console Home">
         <span class="aws-smile">aws</span>
       </a>
-      <button class="services-btn" type="button">
-        <span class="bars">&#9776;</span> Services
-      </button>
+      <div class="services-wrap">
+        <button class="services-btn" id="servicesBtn" type="button"
+                aria-expanded="false" aria-controls="servicesPanel">
+          <span class="bars">&#9776;</span> <span class="sv-label">Services</span>
+        </button>
+        <div id="servicesPanel" class="services-panel" role="menu" aria-hidden="true">
+          <div class="sp-head">
+            <strong>All Technical Skills</strong>
+          </div>
+          <div class="sp-grid">
+            {{ $all := slice }}
+            {{ range $k, $v := $p.skills }}
+              {{ range $v }}{{ $all = $all | append . }}{{ end }}
+            {{ end }}
+            {{ range (sort $all) }}
+            <span class="sp-item">{{ . }}</span>
+            {{ end }}
+          </div>
+        </div>
+      </div>
     </div>
     <div class="topbar-search">
       <span class="search-icon">&#128269;</span>
       <input id="globalSearch" type="search" autocomplete="off"
-             placeholder="Search for services, features, sections [Alt+S]"
+             placeholder="Search for Profile, Skillset, Experience, Certifications etc. "
              aria-label="Search sections" />
       <div id="searchResults" class="search-results" role="listbox" hidden></div>
     </div>
     <div class="topbar-right">
-      <span class="pill">{{ $p.profile.region }}</span>
       <span class="pill user-pill">
         <span class="avatar">{{ substr $p.profile.name 0 1 }}</span>
         {{ $p.profile.name }}
       </span>
+      <div class="account-wrap region-wrap">
+        <button class="account-btn" id="regionBtn" type="button"
+                aria-expanded="false" aria-controls="regionPanel">
+          <span id="regionLabel">New Delhi</span>
+          <span class="caret">&#9662;</span>
+        </button>
+        <div id="regionPanel" class="account-panel region-panel" role="menu" aria-hidden="true">
+          <ul class="ap-list region-list">
+            <li><button type="button" class="region-opt" data-region="Delhi">New Delhi</button></li>
+            <li><button type="button" class="region-opt" data-region="Noida">Noida</button></li>
+            <li><button type="button" class="region-opt" data-region="Gurugram">Gurugram</button></li>
+            <li><button type="button" class="region-opt" data-region="Bangalore">Bangalore</button></li>
+          </ul>
+        </div>
+      </div>
+      <div class="account-wrap">
+        <button class="account-btn" id="accountBtn" type="button"
+                aria-expanded="false" aria-controls="accountPanel">
+          Account Details
+          <span class="caret">&#9662;</span>
+        </button>
+        <div id="accountPanel" class="account-panel" role="menu" aria-hidden="true">
+          <ul class="ap-list">
+            <li><span class="ap-k">Role</span><span class="ap-v">{{ $p.profile.role }}</span></li>
+            <li><span class="ap-k">Region</span><span class="ap-v">{{ $p.profile.region }}</span></li>
+          </ul>
+          <div class="ap-foot">
+            <a class="btn btn-primary" href="#contact" id="apContactBtn">Open Contact Section</a>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -50,11 +97,9 @@
           <span class="muted">{{ $p.profile.role }} &middot; {{ $p.profile.experience }}</span>
         </div>
         <div class="grid-2">
-          <div class="kv"><strong>Name</strong><span>{{ $p.profile.name }}</span></div>
+          <div class="kv"><strong>Account</strong><span>{{ $p.profile.name }}</span></div>
           <div class="kv"><strong>Role</strong><span>{{ $p.profile.role }}</span></div>
-          <div class="kv"><strong>Title</strong><span>{{ $p.profile.title }}</span></div>
           <div class="kv"><strong>Region</strong><span>{{ $p.profile.region }}</span></div>
-          <div class="kv"><strong>Location</strong><span>{{ $p.profile.location }}</span></div>
           <div class="kv"><strong>Experience</strong><span>{{ $p.profile.experience }}</span></div>
         </div>
         <p class="para">{{ $p.profile.identity_summary }}</p>
@@ -68,7 +113,7 @@
         <div class="widget">
           <div class="widget-head">
             <h2>Sections</h2>
-            <span class="muted">Click any tile to open</span>
+            <span class="muted">Open Section for details</span>
           </div>
           <div class="tile-grid" id="tileGrid">
             {{ range $p.services }}
@@ -76,7 +121,8 @@
               <a class="tile" href="#{{ .id }}" data-id="{{ .id }}"
                  data-name="{{ .section_name }}" data-aws="{{ .aws_service }}">
                 <div class="tile-icon">
-                  <img src="/assets/aws-icons/{{ .icon }}" alt="" loading="lazy" />
+                  <img src="{{ .icon_url }}" alt="" loading="lazy"
+                       onerror="this.onerror=null;this.src='/assets/aws-icons/0454aa97682235df3ed1a3456bc86e62-690ff61a3c9cabacf2d3d79e64e3a8a4.svg';" />
                 </div>
                 <div class="tile-body">
                   <div class="tile-title">{{ .section_name }}</div>
@@ -91,18 +137,20 @@
         <aside class="widget exp-widget">
           <div class="widget-head">
             <h2>Experience</h2>
-            <span class="muted">IBM &rarr; TCS</span>
+            <span class="muted">IBM &larr; TCS</span>
           </div>
           <ol class="exp-timeline">
             {{ range $expIds }}
               {{ $id := . }}
+              {{ $co := cond (hasPrefix $id "ibm") "ibm" "tcs" }}
               {{ range $p.services }}
                 {{ if eq .id $id }}
-                <li>
+                <li class="exp-li exp-{{ $co }}">
                   <a class="exp-item tile" href="#{{ .id }}" data-id="{{ .id }}"
                      data-name="{{ .section_name }}" data-aws="{{ .aws_service }}">
                     <div class="tile-icon">
-                      <img src="/assets/aws-icons/{{ .icon }}" alt="" loading="lazy" />
+                      <img src="{{ .icon_url }}" alt="" loading="lazy"
+                           onerror="this.onerror=null;this.src='/assets/aws-icons/0454aa97682235df3ed1a3456bc86e62-690ff61a3c9cabacf2d3d79e64e3a8a4.svg';" />
                     </div>
                     <div class="tile-body">
                       <div class="tile-title">{{ .section_name }}</div>
@@ -205,28 +253,48 @@
       </template>
 
       <template data-section="ibm">
+        <div class="company-banner ibm-banner">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM" />
+          <div>
+            <div class="cb-title">{{ $p.ibm.company }}</div>
+            <div class="cb-sub">{{ $p.ibm.role }} &middot; {{ $p.ibm.duration }}</div>
+          </div>
+        </div>
         <div class="grid-2">
           <div class="kv"><strong>Company</strong><span>{{ $p.ibm.company }}</span></div>
           <div class="kv"><strong>Role</strong><span>{{ $p.ibm.role }}</span></div>
           <div class="kv"><strong>Duration</strong><span>{{ $p.ibm.duration }}</span></div>
           <div class="kv"><strong>Client</strong><span>{{ $p.ibm.client }}</span></div>
-          <div class="kv"><strong>Project</strong><span>{{ $p.ibm.project }}</span></div>
         </div>
         <p class="para">{{ $p.ibm.vision }}</p>
         <h3>Platform Enables</h3>
         <div class="chips">{{ range $p.ibm.platform_enables }}<span class="chip">{{ . }}</span>{{ end }}</div>
         <h3>Responsibilities</h3>
-        <ul class="bullets">{{ range $p.ibm.responsibilities }}<li>{{ . }}</li>{{ end }}</ul>
+        <ul class="bullets logo-bullets ibm-bullets">{{ range $p.ibm.responsibilities }}<li>{{ . }}</li>{{ end }}</ul>
         <h3>Awards &amp; Recognition</h3>
-        <ul class="bullets">{{ range $p.ibm_awards }}<li>{{ . }}</li>{{ end }}</ul>
+        <ul class="bullets logo-bullets ibm-bullets">{{ range $p.ibm_awards }}<li>{{ . }}</li>{{ end }}</ul>
       </template>
 
       <template data-section="ibm-projects">
+        <div class="company-banner ibm-banner">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM" />
+          <div>
+            <div class="cb-title">{{ $p.ibm.project }}</div>
+            <div class="cb-sub">{{ $p.ibm.client }}</div>
+          </div>
+        </div>
         <h3>Key Contributions</h3>
-        <ul class="bullets">{{ range $p.ibm.contributions }}<li>{{ . }}</li>{{ end }}</ul>
+        <ul class="bullets logo-bullets ibm-bullets">{{ range $p.ibm.contributions }}<li>{{ . }}</li>{{ end }}</ul>
       </template>
 
       <template data-section="tcs">
+        <div class="company-banner tcs-banner">
+          <img src="/assets/icons/tcs.jpg" alt="TCS" />
+          <div>
+            <div class="cb-title">{{ $p.tcs.company }}</div>
+            <div class="cb-sub">{{ $p.tcs.role }} &middot; {{ $p.tcs.duration }}</div>
+          </div>
+        </div>
         <div class="grid-2">
           <div class="kv"><strong>Company</strong><span>{{ $p.tcs.company }}</span></div>
           <div class="kv"><strong>Role</strong><span>{{ $p.tcs.role }}</span></div>
@@ -234,16 +302,23 @@
           <div class="kv"><strong>Domain</strong><span>{{ $p.tcs.domain }}</span></div>
         </div>
         <h3>Responsibilities</h3>
-        <ul class="bullets">{{ range $p.tcs.responsibilities }}<li>{{ . }}</li>{{ end }}</ul>
+        <ul class="bullets logo-bullets tcs-bullets">{{ range $p.tcs.responsibilities }}<li>{{ . }}</li>{{ end }}</ul>
       </template>
 
       <template data-section="tcs-projects">
+        <div class="company-banner tcs-banner">
+          <img src="/assets/icons/tcs.jpg" alt="TCS" />
+          <div>
+            <div class="cb-title">TCS Projects</div>
+            <div class="cb-sub">{{ $p.tcs.domain }}</div>
+          </div>
+        </div>
         {{ range $p.tcs_projects }}
         <div class="project-card">
           <h3>{{ .name }}</h3>
           <p class="para">{{ .overview }}</p>
           <div class="chips">{{ range .stack }}<span class="chip">{{ . }}</span>{{ end }}</div>
-          <ul class="bullets">{{ range .contributions }}<li>{{ . }}</li>{{ end }}</ul>
+          <ul class="bullets logo-bullets tcs-bullets">{{ range .contributions }}<li>{{ . }}</li>{{ end }}</ul>
         </div>
         {{ end }}
       </template>
@@ -278,7 +353,19 @@
           <div class="kv"><strong>Email</strong><a href="mailto:{{ $p.contact.email }}">{{ $p.contact.email }}</a></div>
           <div class="kv"><strong>Phone</strong><span>{{ $p.contact.phone }}</span></div>
           <div class="kv"><strong>Location</strong><span>{{ $p.contact.location }}</span></div>
-          <div class="kv"><strong>LinkedIn</strong><a href="{{ $p.contact.linkedin }}" target="_blank" rel="noopener">{{ $p.contact.linkedin_handle }}</a></div>
+          <div class="kv"><strong>LinkedIn</strong>
+            <a href="{{ $p.contact.linkedin }}" target="_blank" rel="noopener">
+              linkedin.com/in/{{ $p.contact.linkedin_handle }}
+            </a>
+          </div>
+        </div>
+        <div class="contact-actions">
+          <a class="btn btn-primary" href="mailto:{{ $p.contact.email }}">&#9993; Email Me</a>
+          <a class="btn btn-linkedin" href="{{ $p.contact.linkedin }}" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2zM8 19H5V8h3v11zM6.5 6.7a1.74 1.74 0 1 1 0-3.48 1.74 1.74 0 0 1 0 3.48zM19 19h-3v-5.6c0-1.34-.03-3.07-1.87-3.07-1.87 0-2.16 1.46-2.16 2.97V19h-3V8h2.88v1.5h.04c.4-.76 1.38-1.56 2.84-1.56 3.04 0 3.6 2 3.6 4.59V19z"/></svg>
+            LinkedIn Profile
+          </a>
+          <a class="btn" href="tel:{{ $p.contact.phone }}">&#9742; Call</a>
         </div>
         <p class="para cta">{{ $p.contact.cta }}</p>
       </template>

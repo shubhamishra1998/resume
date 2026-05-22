@@ -220,6 +220,109 @@
     }
   });
 
+  // ---- Services dropdown (all technical skills) ----
+  const servicesBtn = document.getElementById("servicesBtn");
+  const servicesPanel = document.getElementById("servicesPanel");
+  if (servicesBtn && servicesPanel) {
+    const setOpen = (open) => {
+      servicesPanel.classList.toggle("is-open", open);
+      servicesPanel.setAttribute("aria-hidden", String(!open));
+      servicesBtn.setAttribute("aria-expanded", String(open));
+    };
+    servicesBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setOpen(!servicesPanel.classList.contains("is-open"));
+    });
+    document.addEventListener("click", (e) => {
+      if (!servicesPanel.classList.contains("is-open")) return;
+      if (servicesPanel.contains(e.target)) return;
+      if (servicesBtn.contains(e.target)) return;
+      setOpen(false);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && servicesPanel.classList.contains("is-open")) {
+        setOpen(false);
+      }
+    });
+  }
+
+  // ---- Account dropdown ----
+  // Region dropdown (top-right, mirrors account-panel behavior)
+  const regionBtn = document.getElementById("regionBtn");
+  const regionPanel = document.getElementById("regionPanel");
+  const regionLabel = document.getElementById("regionLabel");
+  if (regionBtn && regionPanel) {
+    const setRegionOpen = (open) => {
+      regionPanel.classList.toggle("is-open", open);
+      regionPanel.setAttribute("aria-hidden", String(!open));
+      regionBtn.setAttribute("aria-expanded", String(open));
+    };
+    regionBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setRegionOpen(!regionPanel.classList.contains("is-open"));
+    });
+    document.addEventListener("click", (e) => {
+      if (!regionPanel.classList.contains("is-open")) return;
+      if (regionPanel.contains(e.target)) return;
+      if (regionBtn.contains(e.target)) return;
+      setRegionOpen(false);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && regionPanel.classList.contains("is-open")) {
+        setRegionOpen(false);
+      }
+    });
+    regionPanel.querySelectorAll(".region-opt").forEach((opt) => {
+      opt.addEventListener("click", (e) => {
+        e.preventDefault();
+        const r = opt.getAttribute("data-region") || "Delhi";
+        if (regionLabel) regionLabel.textContent = r;
+        regionPanel.querySelectorAll(".region-opt").forEach((o) =>
+          o.classList.toggle("is-active", o === opt)
+        );
+        setRegionOpen(false);
+      });
+    });
+    const defaultOpt = regionPanel.querySelector('.region-opt[data-region="Delhi"]');
+    if (defaultOpt) defaultOpt.classList.add("is-active");
+  }
+
+  const accountBtn = document.getElementById("accountBtn");
+  const accountPanel = document.getElementById("accountPanel");
+  if (accountBtn && accountPanel) {
+    const setOpen = (open) => {
+      accountPanel.classList.toggle("is-open", open);
+      accountPanel.setAttribute("aria-hidden", String(!open));
+      accountBtn.setAttribute("aria-expanded", String(open));
+    };
+    accountBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setOpen(!accountPanel.classList.contains("is-open"));
+    });
+    document.addEventListener("click", (e) => {
+      if (!accountPanel.classList.contains("is-open")) return;
+      if (accountPanel.contains(e.target)) return;
+      if (accountBtn.contains(e.target)) return;
+      setOpen(false);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && accountPanel.classList.contains("is-open")) {
+        setOpen(false);
+      }
+    });
+    const apContactBtn = document.getElementById("apContactBtn");
+    if (apContactBtn) {
+      apContactBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        setOpen(false);
+        openSection("contact");
+      });
+    }
+  }
+
   // Initial route
   routeFromHash();
 })();
