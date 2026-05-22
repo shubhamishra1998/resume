@@ -1,7 +1,9 @@
-baseURL = "https://example.com"
+baseURL = "/"
 languageCode = "en-us"
 title = "My Portfolio Console"
 disableKinds = ["taxonomy", "term"]
+relativeURLs = true
+canonifyURLs = false
 
 [params]
   owner = "Your Name"

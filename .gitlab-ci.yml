@@ -1,14 +1,22 @@
-image: klakegg/hugo:0.121.2-ext
+image: hugomods/hugo:exts-0.153.0
 
 variables:
   GIT_DEPTH: "0"
+  GIT_SUBMODULE_STRATEGY: recursive
+  HUGO_ENV: production
+  TZ: Asia/Kolkata
 
 pages:
+  stage: deploy
   script:
-    - hugo --minify
+    - hugo version
+    - hugo --minify --gc --baseURL "${CI_PAGES_URL}/"
   artifacts:
     paths:
       - public
-  only:
-    - main
-    - master
+    expire_in: 1 week
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  environment:
+    name: production
+    url: $CI_PAGES_URL
